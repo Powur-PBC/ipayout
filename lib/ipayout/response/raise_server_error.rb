@@ -5,7 +5,7 @@ require 'ipayout/error/service_unavailable'
 
 module Ipayout
   module Response
-    class RaiseServerError < Faraday::Response::Middleware
+    class RaiseServerError < Faraday::Middleware
       # rubocop:disable MethodComplexity, MethodLength
       def on_complete(env)
         case env[:status].to_i

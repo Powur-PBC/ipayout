@@ -10,7 +10,7 @@ require 'pry'
 
 module Ipayout
   module Response
-    class RaiseClientError < Faraday::Response::Middleware
+    class RaiseClientError < Faraday::Middleware
       def call(request_env)
         request_body = request_env.body
 

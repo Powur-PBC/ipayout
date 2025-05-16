@@ -1,5 +1,5 @@
 require 'faraday'
-require 'faraday_middleware'
+require 'faraday/mashify'
 require 'ipayout/core_ext/hash'
 require 'ipayout/response/raise_client_error'
 require 'ipayout/response/raise_server_error'
@@ -18,7 +18,6 @@ module Ipayout
           user_agent: user_agent
         },
         ssl: { verify: false }
-
       }
 
       faraday_options = connection_options.deep_merge(default_options)
@@ -27,11 +26,11 @@ module Ipayout
 
       Faraday.new(url: faraday_options['url'], proxy: faraday_options['proxy']) do |faraday|
         faraday.request :url_encoded
-        #faraday.response :logger
+        faraday.response :raise_error
         faraday.use Ipayout::Response::RaiseClientError
         faraday.use Ipayout::Response::RaiseServerError
-        faraday.use Faraday::Response::Mashify
-        faraday.use Faraday::Response::ParseJson
+        faraday.response :mashify
+        faraday.response :json, content_type: [/.*/]
         faraday.adapter Faraday.default_adapter
       end
     end
